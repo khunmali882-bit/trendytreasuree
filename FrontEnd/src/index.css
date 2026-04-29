@@ -139,3 +139,9 @@ button { cursor: pointer; border: none; font-family: var(--font-body); }
   margin-bottom: 15px;
   font-family: var(--font-heading);
 }
+
+.gold-text {
+  color: var(--gold);
+  font-weight: bold;
+  font-family: var(--font-heading);
+}

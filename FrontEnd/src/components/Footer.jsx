@@ -39,7 +39,10 @@ const Footer = () => {
                 </div>
             </div>
 
-            <p className="footer-copy">© 2026 TrendyTreasure. All rights reserved.</p>
+            <p className="footer-copy">
+                © 2026 TrendyTreasure. All rights reserved. <br />
+                Created with ❤️ by <span className="gold-text">Shifa Shehzad Malek</span>
+            </p>
         </footer>
     );
 };
