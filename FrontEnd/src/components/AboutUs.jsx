@@ -8,7 +8,7 @@ const AboutUs = () => {
                 
                 <section>
                     <h2>Our Story</h2>
-                    <p>TrendyTreasure was founded in 2024 with a simple mission: to make luxury fashion accessible and trustworthy. We believe that everyone deserves to experience the elegance of high-end design without the complexity of traditional luxury shopping.</p>
+                    <p>TrendyTreasure was founded in 2026 by <span className="gold-text">Shifa Shehzad Malek</span> with a simple mission: to make luxury fashion accessible and trustworthy. We believe that everyone deserves to experience the elegance of high-end design without the complexity of traditional luxury shopping.</p>
                 </section>
 
                 <section>
