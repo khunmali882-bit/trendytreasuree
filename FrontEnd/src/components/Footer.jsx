@@ -34,7 +34,7 @@ const Footer = () => {
                     <div className="footer-contact">
                         <p>📧 trendytreasure0813@gmail.com</p>
                         <p>📞 +91 9727013000</p>
-                        <p>📍 Mumbai, India</p>
+                        <p>📍 Surat, Gujarat, India</p>
                     </div>
                 </div>
             </div>

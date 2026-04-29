@@ -24,8 +24,8 @@ const ContactUs = () => {
                     <div className="contact-item">
                         <h3>📍 Registered Address</h3>
                         <p>TrendyTreasure Pvt Ltd,</p>
-                        <p>123 Luxury Street, Bandra West,</p>
-                        <p>Mumbai, Maharashtra, 400050, India</p>
+                        <p>Firdosh Shopping, Kim Charasta,</p>
+                        <p>Surat, Gujarat - 394110, India</p>
                     </div>
                 </div>
 

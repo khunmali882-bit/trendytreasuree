@@ -47,7 +47,7 @@ const TermsConditions = () => {
 
                 <section>
                     <h2>7. Governing Law</h2>
-                    <p>These terms are governed by the laws of India. Any disputes shall be subject to the exclusive jurisdiction of the courts in Mumbai.</p>
+                    <p>These terms are governed by the laws of India. Any disputes shall be subject to the exclusive jurisdiction of the courts in Surat, Gujarat.</p>
                 </section>
             </div>
         </div>
