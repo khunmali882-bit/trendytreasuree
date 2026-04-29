@@ -56,10 +56,11 @@ exports.handler = async (event, context) => {
     };
   } catch (error) {
     console.error('Error creating Razorpay order:', error);
+    const errorMessage = error.error ? error.error.description : (error.message || 'Failed to create order');
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: error.message || 'Failed to create order' }),
+      body: JSON.stringify({ error: errorMessage }),
     };
   }
 };
