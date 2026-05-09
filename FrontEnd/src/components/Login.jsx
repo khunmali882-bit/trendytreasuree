@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { API_BASE_URL } from '../utils/api';
 import '../styles/Auth.css';
 
 const Login = () => {
@@ -13,7 +14,7 @@ const Login = () => {
         e.preventDefault();
         setError('');
         try {
-            const response = await fetch('http://localhost:5000/login', {
+            const response = await fetch(`${API_BASE_URL}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: formData.email, password: formData.password })
@@ -23,10 +24,11 @@ const Login = () => {
                 login(data.user, data.token);
                 navigate('/');
             } else {
-                setError(data.error || 'Login failed');
+                setError(data.error || 'Login failed. Please check your credentials.');
             }
         } catch (err) {
-            setError('Server error. Please try again.');
+            console.error('Login error:', err);
+            setError('Unable to connect to server. Please ensure the backend is running.');
         }
     };
 

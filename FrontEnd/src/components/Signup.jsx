@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import '../styles/Auth.css';
+import { API_BASE_URL } from '../utils/api';
 
 const Signup = () => {
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
@@ -11,19 +11,22 @@ const Signup = () => {
         e.preventDefault();
         setError('');
         try {
-            const response = await fetch('http://localhost:5000/register', {
+            const response = await fetch(`${API_BASE_URL}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: formData.name, email: formData.email, password: formData.password })
             });
+            
             const data = await response.json();
+            
             if (response.ok) {
                 navigate('/login');
             } else {
-                setError(data.error || 'Registration failed');
+                setError(data.error || 'Registration failed. Please try again.');
             }
         } catch (err) {
-            setError('Server error. Please try again.');
+            console.error('Signup error:', err);
+            setError('Unable to connect to server. Please ensure the backend is running.');
         }
     };
 
