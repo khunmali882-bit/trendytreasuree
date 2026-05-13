@@ -1,23 +1,26 @@
 const crypto = require('crypto');
-const users = require('../../src/data/users.json');
+const util = require('util');
+const usersData = require('../../src/data/users.json');
 
 const JWT_SECRET = 'trendytreasure-secret-key';
+const scrypt = util.promisify(crypto.scrypt);
 
-// Helper functions from authHelper.js
+// Helper functions
 const verifyPassword = async (storedPassword, suppliedPassword) => {
     const [hashedPassword, salt] = storedPassword.split('.');
     if (!hashedPassword || !salt) return false;
-    
-    // Using synchronous scrypt for simplicity in function if needed, but promisified is better
-    // Netlify functions support async/await
-    const util = require('util');
-    const scrypt = util.promisify(crypto.scrypt);
     const buf = await scrypt(suppliedPassword, Buffer.from(salt, 'hex'), 64);
     return buf.toString('hex') === hashedPassword;
 };
 
+const hashPassword = async (password) => {
+    const salt = crypto.randomBytes(16);
+    const buf = await scrypt(password, salt, 64);
+    return `${buf.toString('hex')}.${salt.toString('hex')}`;
+};
+
 const generateToken = (user) => {
-    const payload = JSON.stringify({ id: user.id, email: user.email, timestamp: Date.now() });
+    const payload = JSON.stringify({ id: user.id || user._id, email: user.email, timestamp: Date.now() });
     const signature = crypto.createHmac('sha256', JWT_SECRET).update(payload).digest('hex');
     return `${Buffer.from(payload).toString('base64')}.${signature}`;
 };
@@ -34,18 +37,25 @@ exports.handler = async (event, context) => {
         return { statusCode: 204, headers };
     }
 
-    if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
-    }
-
     try {
         const body = JSON.parse(event.body);
         const { action } = event.queryStringParameters || {};
+        const isLogin = action === 'login' || event.path.endsWith('/login');
+        const isRegister = action === 'register' || event.path.endsWith('/register');
+
+        // MONGODB CONNECTION (Optional)
+        let dbUsers = [];
+        const MONGODB_URI = process.env.MONGODB_URI;
+
+        if (MONGODB_URI) {
+            // If the user adds a MongoDB URI, we could use a real DB here.
+            // For now, let's keep it simple and focus on the error they are seeing.
+        }
 
         // LOGIN
-        if (action === 'login' || event.path.endsWith('/login')) {
+        if (isLogin) {
             const { email, password } = body;
-            const user = users.find(u => u.email === email);
+            const user = usersData.find(u => u.email === email);
 
             if (!user) {
                 return { statusCode: 401, headers, body: JSON.stringify({ error: 'Invalid credentials' }) };
@@ -59,28 +69,42 @@ exports.handler = async (event, context) => {
             const token = generateToken(user);
             const { password: _, ...userSafe } = user;
 
-            return {
-                statusCode: 200,
-                headers,
-                body: JSON.stringify({ message: 'Login successful', token, user: userSafe })
-            };
+            return { statusCode: 200, headers, body: JSON.stringify({ message: 'Login successful', token, user: userSafe }) };
         }
 
-        // REGISTER (Read-only on Netlify Functions unless using a DB)
-        if (action === 'register' || event.path.endsWith('/register')) {
-            return {
-                statusCode: 403,
-                headers,
-                body: JSON.stringify({ 
-                    error: 'Registration is currently disabled on the live site. Please use an existing test account or contact support to connect a database.' 
-                })
-            };
+        // REGISTER
+        if (isRegister) {
+            const { name, email, password } = body;
+            
+            // Validation
+            if (!name || !email || !password) {
+                return { statusCode: 400, headers, body: JSON.stringify({ error: 'All fields are required' }) };
+            }
+
+            // Check if user already exists in our static list
+            if (usersData.find(u => u.email === email)) {
+                return { statusCode: 409, headers, body: JSON.stringify({ error: 'User already exists' }) };
+            }
+
+            // For "Real Web" we need a place to save. 
+            // If MONGODB_URI is not set, we show a helpful instruction.
+            if (!MONGODB_URI) {
+                return { 
+                    statusCode: 503, 
+                    headers, 
+                    body: JSON.stringify({ 
+                        error: 'Registration requires a Database connection on the live site. Please add MONGODB_URI to your Netlify environment variables.' 
+                    }) 
+                };
+            }
+
+            // TODO: Implement real MongoDB saving here if MONGODB_URI is provided
+            return { statusCode: 501, headers, body: JSON.stringify({ error: 'Database integration in progress' }) };
         }
 
-        return { statusCode: 404, headers, body: JSON.stringify({ error: 'Endpoint not found' }) };
+        return { statusCode: 404, headers, body: JSON.stringify({ error: 'Not Found' }) };
 
     } catch (error) {
-        console.error('Auth error:', error);
-        return { statusCode: 500, headers, body: JSON.stringify({ error: 'Internal Server Error' }) };
+        return { statusCode: 500, headers, body: JSON.stringify({ error: 'Server Error' }) };
     }
 };
