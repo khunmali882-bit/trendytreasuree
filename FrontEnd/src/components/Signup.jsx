@@ -14,7 +14,11 @@ const Signup = () => {
             const response = await fetch(`${API_BASE_URL}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: formData.name, email: formData.email, password: formData.password })
+                body: JSON.stringify({ 
+                    name: formData.name.trim(), 
+                    email: formData.email.trim().toLowerCase(), 
+                    password: formData.password.trim() 
+                })
             });
             
             const data = await response.json();
