@@ -5,11 +5,14 @@ import { API_BASE_URL } from '../utils/api';
 const Signup = () => {
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        setLoading(true);
+
         try {
             const response = await fetch(`${API_BASE_URL}/register`, {
                 method: 'POST',
@@ -29,8 +32,10 @@ const Signup = () => {
                 setError(data.error || 'Registration failed. Please try again.');
             }
         } catch (err) {
-            console.error('Signup error:', err);
-            setError('Unable to connect to server. Please ensure the backend is running.');
+            console.error('Signup connection error:', err);
+            setError('Connection error. Please check your internet or database settings.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -40,10 +45,33 @@ const Signup = () => {
                 <h2>Create Account</h2>
                 <form onSubmit={handleSubmit}>
                     {error && <div className="error-message">{error}</div>}
-                    <input type="text" placeholder="Full Name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required />
-                    <input type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} required />
-                    <input type="password" placeholder="Password" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} required />
-                    <button type="submit" className="btn-primary">Sign Up</button>
+                    <input 
+                        type="text" 
+                        placeholder="Full Name" 
+                        value={formData.name} 
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })} 
+                        required 
+                        disabled={loading}
+                    />
+                    <input 
+                        type="email" 
+                        placeholder="Email" 
+                        value={formData.email} 
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })} 
+                        required 
+                        disabled={loading}
+                    />
+                    <input 
+                        type="password" 
+                        placeholder="Password" 
+                        value={formData.password} 
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })} 
+                        required 
+                        disabled={loading}
+                    />
+                    <button type="submit" className="btn-primary" disabled={loading}>
+                        {loading ? 'Creating Account...' : 'Sign Up'}
+                    </button>
                 </form>
                 <p className="auth-link">Already have an account? <Link to="/login">Login</Link></p>
             </div>
