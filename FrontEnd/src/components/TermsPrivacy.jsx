@@ -1,11 +1,11 @@
-import '../styles/TermsPrivacy.css';
+import '../styles/LegalPages.css';
 
 const TermsPrivacy = () => {
     return (
-        <div className="terms-container section-padding">
+        <div className="legal-container section-padding">
             <div className="container">
                 <h2 className="section-title">Terms & Privacy Policy</h2>
-                <div className="terms-content">
+                <div className="legal-card">
                     <section>
                         <h3>Terms of Service</h3>
                         <p>By accessing TrendyTreasure, you agree to these terms. We reserve the right to modify these terms at any time.</p>
