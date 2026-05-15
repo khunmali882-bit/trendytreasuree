@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { API_BASE_URL } from '../utils/api';
 import '../styles/Payment.css';
 
 const Payment = () => {
@@ -44,10 +45,9 @@ const Payment = () => {
                 return;
             }
 
-            const API_URL = '/.netlify/functions';
 
             // Create order on backend
-            const orderResponse = await fetch(`${API_URL}/create-order`, {
+            const orderResponse = await fetch(`${API_BASE_URL}/create-order`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ const Payment = () => {
                 handler: async function (response) {
                     try {
                         // Verify payment on backend
-                        const verifyResponse = await fetch(`${API_URL}/verify-payment`, {
+                        const verifyResponse = await fetch(`${API_BASE_URL}/verify-payment`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

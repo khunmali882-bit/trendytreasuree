@@ -20,7 +20,7 @@ const ProductDetail = () => {
         fetch('/products.json')
             .then(res => res.json())
             .then(data => {
-                const product = data.find(p => p.id === id);
+                const product = data.find(p => String(p.id) === id);
                 setProduct(product);
                 if (data.variants && data.variants.length > 0) {
                     setSelectedVariant(data.variants[0]);

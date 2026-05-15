@@ -5,7 +5,7 @@ import '../styles/RecentlyViewed.css';
 
 export const addToRecentlyViewed = (product) => {
     const recent = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
-    const filtered = recent.filter(p => p.id !== product.id);
+    const filtered = recent.filter(p => p.id != product.id);
     filtered.unshift(product);
     localStorage.setItem('recentlyViewed', JSON.stringify(filtered.slice(0, 6)));
 };
