@@ -16,8 +16,9 @@ import Wishlist from './components/Wishlist';
 import Admin from './components/Admin';
 import Payment from './components/Payment';
 import OrderConfirmation from './components/OrderConfirmation';
-import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsPrivacy from './components/TermsPrivacy';
 import TermsConditions from './components/TermsConditions';
+import PrivacyPolicy from './components/PrivacyPolicy';
 import RefundPolicy from './components/RefundPolicy';
 import AboutUs from './components/AboutUs';
 import ContactUs from './components/ContactUs';
@@ -69,7 +70,7 @@ function App() {
                 <Route path="/order-confirmation" element={<OrderConfirmation />} />
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/rate" element={<RateUs />} />
-                <Route path="/terms" element={<TermsConditions />} />
+                <Route path="/terms" element={<TermsPrivacy />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/refund" element={<RefundPolicy />} />
                 <Route path="/about" element={<AboutUs />} />

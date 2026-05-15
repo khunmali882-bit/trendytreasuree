@@ -15,7 +15,10 @@ const hashPassword = async (password) => {
 
 const verifyPassword = async (storedPassword, suppliedPassword) => {
     const [hashedPassword, salt] = storedPassword.split('.');
-    if (!hashedPassword || !salt) return false;
+    if (!hashedPassword || !salt) {
+        // Fallback for old non-salted hashes
+        return crypto.createHash('sha256').update(suppliedPassword).digest('hex') === storedPassword;
+    }
 
     const buf = await scrypt(suppliedPassword, Buffer.from(salt, 'hex'), 64);
     return buf.toString('hex') === hashedPassword;

@@ -15,10 +15,17 @@ async function connectToDatabase() {
     const MONGODB_URI = process.env.MONGODB_URI;
     if (!MONGODB_URI) return null;
 
-    const client = await MongoClient.connect(MONGODB_URI);
-    const db = client.db('trendytreasure');
-    cachedDb = db;
-    return db;
+    try {
+        const client = await MongoClient.connect(MONGODB_URI, {
+            serverSelectionTimeoutMS: 5000 // 5 seconds timeout
+        });
+        const db = client.db('trendytreasure');
+        cachedDb = db;
+        return db;
+    } catch (err) {
+        console.error('MongoDB Connection Error:', err.message);
+        return null;
+    }
 }
 
 // Helper functions

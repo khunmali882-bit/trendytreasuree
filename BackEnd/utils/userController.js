@@ -9,7 +9,8 @@ const USERS_FILE = 'users.json';
 const registerUser = async (req, res) => {
     try {
         const body = await getRequestBody(req);
-        const { name, email, password } = body;
+        const { name, password } = body;
+        const email = body.email ? body.email.trim().toLowerCase() : '';
 
         if (!name || !email || !password) {
             return sendError(res, 400, 'Name, email, and password are required');
@@ -54,7 +55,8 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const body = await getRequestBody(req);
-        const { email, password } = body;
+        const email = body.email ? body.email.trim().toLowerCase() : '';
+        const password = body.password ? body.password.trim() : '';
 
         if (!email || !password) {
             return sendError(res, 400, 'Email and password are required');
